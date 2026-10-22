@@ -1,0 +1,98 @@
+{
+    "HealthyLeaf": {
+        "disease_name": "Rice / Crop - Healthy Leaf",
+        "symptoms": "Foliage displays natural green color without leaf spots, rusts, or lesions.",
+        "cause": "No pathogen detected. Normal plant physiological state.",
+        "treatment": "Continue regular irrigation, balanced soil fertilization, and monitoring."
+    },
+    "BlackPoint": {
+        "disease_name": "Wheat - Black Point Disease",
+        "symptoms": "Dark brown to black discoloration at the embryo end of the grain and foliage bases.",
+        "cause": "Fungal infection primarily caused by Alternaria alternata and Bipolaris sorokiniana.",
+        "treatment": "Use certified disease-free seeds and apply recommended fungicide seed treatments."
+    },
+    "WheatBlast": {
+        "disease_name": "Wheat - Wheat Blast",
+        "symptoms": "Bleached heads and dried leaves with dark gray spots.",
+        "cause": "Magnaporthe oryzae fungus.",
+        "treatment": "Apply triazole-based fungicides and utilize resistant cultivar seeds."
+    },
+    "FusariumFootRot": {
+        "disease_name": "Wheat - Fusarium Foot Rot",
+        "symptoms": "Brown discoloration of lower stems, crown rot, and stunted growth.",
+        "cause": "Fusarium culmorum fungal spores in soil.",
+        "treatment": "Ensure crop rotation with non-host crops and treat seeds with broad-spectrum fungicides."
+    },
+    "LeafBlight": {
+        "disease_name": "Wheat / Crop - Leaf Blight",
+        "symptoms": "Large brown oval spots on leaves that expand and cause leaf drying.",
+        "cause": "Helminthosporium / Bipolaris species fungal infection.",
+        "treatment": "Spray Mancozeb or Propiconazole at early onset of disease signs."
+    },
+    "diseased cotton leaf": {
+        "disease_name": "Cotton - Leaf Blight / Spot",
+        "symptoms": "Irregular reddish-brown lesions with yellowish borders across leaf tissue.",
+        "cause": "Fungal pathogen attack exacerbated by humid weather.",
+        "treatment": "Prune heavily infected lower leaves and apply copper oxychloride."
+    },
+    "diseased cotton plant": {
+        "disease_name": "Cotton - Foliar Disease Strain",
+        "symptoms": "Widespread leaf yellowing, wilting, and brown necrosis patches.",
+        "cause": "Bacterial or fungal foliar complex.",
+        "treatment": "Spray recommended systemic fungicide and maintain proper field drainage."
+    },
+    "fresh cotton leaf": {
+        "disease_name": "Cotton - Healthy Fresh Leaf",
+        "symptoms": "Bright green vibrant leaf structure without spots, lesions, or wilting.",
+        "cause": "No pathogen activity detected.",
+        "treatment": "Maintain optimal nitrogen levels and regular pest scouting."
+    },
+    "fresh cotton plant": {
+        "disease_name": "Cotton - Healthy Plant",
+        "symptoms": "Healthy vegetative canopy with clear green foliage.",
+        "cause": "Normal optimal plant condition.",
+        "treatment": "Follow standard irrigation schedule and crop care routine."
+    },
+    "Pepper_bell___Bacterial_spot": {
+        "disease_name": "Pepper Bell - Bacterial Spot",
+        "symptoms": "Small, water-soaked spots on leaf surfaces turning brown with yellow halos.",
+        "cause": "Xanthomonas campestris bacterial pathogen.",
+        "treatment": "Apply copper-based fungicides and avoid overhead watering."
+    },
+    "Pepper_bell___healthy": {
+        "disease_name": "Pepper Bell - Healthy Leaf",
+        "symptoms": "Smooth green foliage free from spots or fungal powder.",
+        "cause": "No pathogen detected.",
+        "treatment": "Maintain standard soil moisture and plant nutrients."
+    },
+    "Rice___Bacterial_leaf_blight": {
+        "disease_name": "Rice - Bacterial Leaf Blight",
+        "symptoms": "Water-soaked lesions turning yellow-white along leaf margins.",
+        "cause": "Xanthomonas oryzae pv. oryzae bacterial pathogen.",
+        "treatment": "Apply copper-based bactericides and maintain proper field drainage."
+    },
+    "Rice___Brown_spot": {
+        "disease_name": "Rice - Brown Spot",
+        "symptoms": "Oval or sesame-shaped brown spots with yellow halos on leaves.",
+        "cause": "Bipolaris oryzae fungal infection.",
+        "treatment": "Improve soil fertility with balanced NPK and apply Mancozeb fungicide."
+    },
+    "Wheat___Yellow_rust": {
+        "disease_name": "Wheat - Yellow (Stripe) Rust",
+        "symptoms": "Bright yellow pustules forming distinct linear stripes along leaf veins.",
+        "cause": "Puccinia striiformis fungal spores spread by air currents.",
+        "treatment": "Apply triazole-based fungicides like Propiconazole or Tebuconazole."
+    },
+    "Mango___Anthracnose": {
+        "disease_name": "Mango Tree - Anthracnose",
+        "symptoms": "Dark brown to black angular leaf spots and blossom blight.",
+        "cause": "Colletotrichum gloeosporioides fungal pathogen.",
+        "treatment": "Prune infected twigs and apply Copper Hydroxide or Carbendazim."
+    },
+    "Citrus___canker": {
+        "disease_name": "Citrus Tree - Citrus Canker",
+        "symptoms": "Raised corky lesions on leaves and fruit with yellow water-soaked halos.",
+        "cause": "Xanthomonas citri bacterial infection.",
+        "treatment": "Apply copper spray during flush periods and remove infected twigs."
+    }
+}

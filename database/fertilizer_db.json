@@ -1,0 +1,44 @@
+{
+    "Urea": {
+        "npk": "46-0-0",
+        "primary_nutrient": "Nitrogen",
+        "best_for": "Severe Nitrogen deficiency, rapid vegetative leaf growth",
+        "application_tips": "Incorporate into moist soil immediately after application or water lightly to prevent nitrogen volatilization as ammonia gas."
+    },
+    "DAP (Di-Ammonium Phosphate)": {
+        "npk": "18-46-0",
+        "primary_nutrient": "Phosphorus and Nitrogen",
+        "best_for": "Root development, seedling establishment, early growth stages",
+        "application_tips": "Apply in bands near the seed zone at planting. Avoid direct contact with seeds."
+    },
+    "SOP (Sulphate of Potash)": {
+        "npk": "0-0-50",
+        "primary_nutrient": "Potassium and Sulfur",
+        "best_for": "Fruit development, drought resistance, disease resilience, chloride-sensitive crops like Potato and Tomato",
+        "application_tips": "Apply during flowering and fruiting stages. Helps improve fruit quality, shelf life, and water regulation."
+    },
+    "MOP (Muriate of Potash / KCl)": {
+        "npk": "0-0-60",
+        "primary_nutrient": "Potassium",
+        "best_for": "General potassium replenishment in non-chloride sensitive field crops like Wheat and Maize",
+        "application_tips": "Apply before sowing or early vegetative stage. Avoid heavy applications on potatoes or tobacco."
+    },
+    "Agricultural Lime (Calcium Carbonate)": {
+        "npk": "0-0-0 + Ca",
+        "primary_nutrient": "pH Corrector (Acidic Soils)",
+        "best_for": "Raising soil pH when pH is below optimal range (< 5.5 - 6.0)",
+        "application_tips": "Broadcast and incorporate into top 6 inches of soil 2-3 months prior to planting for optimal reaction time."
+    },
+    "Agricultural Gypsum (Calcium Sulfate)": {
+        "npk": "0-0-0 + Ca + S",
+        "primary_nutrient": "Calcium & Sulfur (Sodic/Alkaline Soils)",
+        "best_for": "Improving soil structure and lowering soil pH over time when pH is alkaline (> 7.5)",
+        "application_tips": "Apply to sodic or compacted clay soils. Helps leach excess sodium without raising soil pH."
+    },
+    "Compost / Well-Rotted Manure": {
+        "npk": "Variable (~1-1-1 Organic)",
+        "primary_nutrient": "Organic Matter & Balanced Micronutrients",
+        "best_for": "Long-term soil health, microbial activity, moisture retention",
+        "application_tips": "Apply 5-10 tons/hectare before land preparation. Excellent for improving sandy and heavy clay soils."
+    }
+}

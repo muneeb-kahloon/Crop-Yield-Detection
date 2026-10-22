@@ -1,0 +1,52 @@
+{
+    "Tomato": {
+        "ph_min": 6.0,
+        "ph_max": 6.8,
+        "optimal_ph": 6.5,
+        "soil_types": ["Loam", "Sandy Loam", "Clay Loam"],
+        "npk_demand": {"N": "High", "P": "Medium", "K": "High"},
+        "optimal_temp_c": {"min": 18, "max": 29},
+        "water_need": "Medium to High",
+        "description": "Requires well-drained soil rich in organic matter. Highly sensitive to waterlogging and soil acidity below 5.5."
+    },
+    "Potato": {
+        "ph_min": 5.0,
+        "ph_max": 6.5,
+        "optimal_ph": 5.8,
+        "soil_types": ["Loam", "Sandy Loam", "Silt Loam"],
+        "npk_demand": {"N": "High", "P": "High", "K": "High"},
+        "optimal_temp_c": {"min": 15, "max": 24},
+        "water_need": "Medium",
+        "description": "Prefers loose, well-aerated slightly acidic soil to prevent potato scab disease."
+    },
+    "Pepper Bell": {
+        "ph_min": 6.0,
+        "ph_max": 7.0,
+        "optimal_ph": 6.5,
+        "soil_types": ["Loam", "Sandy Loam"],
+        "npk_demand": {"N": "Medium", "P": "Medium", "K": "High"},
+        "optimal_temp_c": {"min": 20, "max": 30},
+        "water_need": "Medium",
+        "description": "Requires warm soil with uniform moisture. High potassium promotes fruit firmness and blossom-end rot resistance."
+    },
+    "Wheat": {
+        "ph_min": 6.0,
+        "ph_max": 7.5,
+        "optimal_ph": 6.8,
+        "soil_types": ["Clay Loam", "Silt Loam", "Loam"],
+        "npk_demand": {"N": "High", "P": "Medium", "K": "Low to Medium"},
+        "optimal_temp_c": {"min": 12, "max": 25},
+        "water_need": "Low to Medium",
+        "description": "Adaptable grain crop requiring well-drained fertile soils. Excessive nitrogen causes lodging."
+    },
+    "Maize (Corn)": {
+        "ph_min": 5.8,
+        "ph_max": 7.0,
+        "optimal_ph": 6.5,
+        "soil_types": ["Loam", "Silt Loam", "Clay Loam"],
+        "npk_demand": {"N": "High", "P": "High", "K": "High"},
+        "optimal_temp_c": {"min": 20, "max": 32},
+        "water_need": "High",
+        "description": "Heavy feeder requiring high nitrogen early in growth and adequate phosphorus for root setup."
+    }
+}
