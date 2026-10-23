@@ -528,46 +528,77 @@ if "Dashboard Overview" in nav_key:
 # -----------------------------------------------------------------------------
 # 2. AI FARMING ASSISTANT (TEAL / EMERALD THEME)
 # -----------------------------------------------------------------------------
-elif "AI Farming Assistant" in nav_key:
+elif "AI Farming Assistant" in navigation or "AI Farming Assistant" in st.session_state.nav_page:
     st.markdown("""
-        <div style="background: linear-gradient(135deg, #115E59 0%, #0D9488 60%, #14B8A6 100%); padding: 2.2rem 2.5rem; border-radius: 18px; color: white; margin-bottom: 2rem; box-shadow: 0 12px 28px -6px rgba(13, 148, 136, 0.28);">
-            <h1 style="color:white; margin:0; font-size:2.2rem; font-weight:800;">🤖 Interactive AI Farming Assistant</h1>
-            <p style="color:#CCFBF1; margin-top:0.4rem; font-size:1.05rem;">Ask questions in plain language to get instant agronomic guidance and system routing</p>
+        <div style="background: linear-gradient(135deg, #0D9488 0%, #14B8A6 100%); padding: 2rem; border-radius: 16px; color: white; margin-bottom: 2rem;">
+            <h2 style="color:white; margin:0;">🤖 Interactive AI Farming Assistant</h2>
+            <p style="color:#E6FFFA; margin-top:0.4rem;">Ask questions in plain language to get instant agronomic guidance and system routing.</p>
         </div>
     """, unsafe_allow_html=True)
-elif "EDA & Data Pipeline" in navigation or "EDA & Data Pipeline" in st.session_state.nav_page:
-    render_eda_dashboard()
-    st.markdown("""
-        <style>
-        .stButton>button, div[data-testid="stForm"] button {
-            background: linear-gradient(135deg, #0D9488 0%, #14B8A6 100%) !important;
-        }
-        </style>
-    """, unsafe_allow_html=True)
-
-    user_query = st.text_input("Type your question or field observation:", placeholder="e.g., My leaves are yellowing and there has been no rain for 3 weeks")
-
-    if not user_query:
-        st.markdown("""
-            <div class="flow-row">
-                <div class="flow-step"><b>🍃 Leaf problems</b><span>"Brown spots are spreading on my tomato leaves"</span></div>
-                <div class="flow-step"><b>🧪 Soil & nutrients</b><span>"My soil is very sandy and plants look pale"</span></div>
-                <div class="flow-step"><b>🌤️ Weather stress</b><span>"No rain for three weeks, what should I do?"</span></div>
-            </div>
-        """, unsafe_allow_html=True)
-
+    
+    # Initialize Chat History
+    if "chat_history" not in st.session_state:
+        st.session_state.chat_history = [
+            {"role": "assistant", "content": "Hello! I am your AI Agronomist. Ask me any question about crops, fertilizers, weather, or leaf diseases!"}
+        ]
+        
+    # Display Chat Messages
+    for msg in st.session_state.chat_history:
+        st.chat_message(msg["role"]).write(msg["content"])
+        
+    # Input Query
+    user_query = st.chat_input("Type your farming question here...")
     if user_query:
-        assistant_res = process_assistant_query(user_query)
-        st.markdown("<br>", unsafe_allow_html=True)
-        st.markdown(f"""
-            <div class="agri-card" style="border-left: 6px solid #0D9488;">
-                <h3 style="color:#0D9488; margin-top:0;">🤖 Assistant Diagnostic Output</h3>
-                <p><b>Detected Intent Category:</b> <span class="badge-mint">{assistant_res['intent']}</span></p>
-                <p style="font-size:1.05rem; margin-top:0.8rem;"><b>Analysis & Feedback:</b> {assistant_res['response']}</p>
-                <hr style="margin: 1rem 0; border-color: #E2E8F0;">
-                <p style="color:#0D9488; font-weight:700;"><b>Suggested Suite Module:</b> {assistant_res['action_advice']}</p>
-            </div>
-        """, unsafe_allow_html=True)
+        st.session_state.chat_history.append({"role": "user", "content": user_query})
+        st.chat_message("user").write(user_query)
+        
+        q_lower = user_query.lower()
+        
+        # ---------------------------------------------------------------------
+        # DYNAMIC SMART RESPONSE ROUTER
+        # ---------------------------------------------------------------------
+        # 1. Bacterial vs Fungal vs Viral Diseases
+        if any(k in q_lower for k in ["bacterial", "fungal", "viral", "difference between"]):
+            response = """🔬 **Comparison of Plant Pathogens:**
+
+• **Fungal Diseases (e.g., Blight, Mildew, Rust):**
+  - *Symptoms:* Powdery coating, leaf spots with rings, wilting.
+  - *Control:* Copper fungicides, Neem oil, reducing foliage moisture.
+
+• **Bacterial Diseases (e.g., Bacterial Canker, Leaf Spot):**
+  - *Symptoms:* Water-soaked lesions, slimy ooze, leaf scorching.
+  - *Control:* Bactericides, clean tools, removing infected plants immediately.
+
+• **Viral Diseases (e.g., Mosaic Virus, Leaf Curl):**
+  - *Symptoms:* Mottled/stunted growth, curled leaves, yellow patterns.
+  - *Control:* No direct cure; control insect vectors (whiteflies/aphids) and use resistant varieties."""
+
+        # 2. Unclear Symptoms Guidance
+        elif any(k in q_lower for k in ["unclear", "not sure", "confused", "identify"]):
+            response = "🔍 **Unclear Symptoms Guidance:**\nIf symptoms are unclear:\n1. Capture clear photos of leaf surface and underside.\n2. Go to the **'Crop Disease Detection'** tab and upload the image.\n3. MobileNetV2 vision model will analyze and detect exact disease class."
+
+        # 3. Fertilizer & NPK Dosage
+        elif any(k in q_lower for k in ["fertilizer", "npk", "urea", "amount", "dosage"]):
+            response = "🌱 **Fertilizer Recommendation:**\n- **Vegetative Phase:** Higher Nitrogen (Urea / NPK 20-10-10) for leaf growth.\n- **Flowering/Fruiting Phase:** Higher Phosphorus & Potassium.\n- Use the **'Fertilizer Recommendations'** tab for exact field dosage calculations!"
+
+        # 4. Yellow Leaves & Tomato Specific Diseases
+        elif any(k in q_lower for k in ["yellow", "brown spot", "early blight", "tomato"]):
+            response = "🍂 **Tomato Leaf Spot Diagnosis:**\nYellow leaves with dark spots usually indicate **Early Blight** or **Septoria Leaf Spot**.\n- Prune lower infected leaves.\n- Avoid overhead sprinkler irrigation.\n- Apply copper-based fungicide or organic Neem oil."
+
+        # 5. Soil pH & Health
+        elif any(k in q_lower for k in ["ph", "soil", "acid", "alkaline"]):
+            response = "🧪 **Soil pH Guidance:**\nOptimal soil pH for most crops is **6.0 - 7.0**.\n- **pH < 6.0 (Acidic):** Add agricultural lime.\n- **pH > 7.5 (Alkaline):** Add elemental sulfur or organic compost."
+
+        # 6. Weather & Climate
+        elif any(k in q_lower for k in ["weather", "rain", "temperature", "heat", "water"]):
+            response = "🌤️ **Climate Guidance:**\nMonitor weather changes closely. In high temperatures, irrigate early morning to avoid evaporation. Check the **'Climate & Weather Advice'** tab for live weather updates!"
+
+        # 7. Fallback General Response
+        else:
+            response = f"🌿 **Agronomic Advice:**\nRegarding *'{user_query}'*:\nMaintain optimal soil moisture, apply balanced fertilizers, and check the **'Crop Disease Detection'** tab to analyze leaf health."
+
+        st.session_state.chat_history.append({"role": "assistant", "content": response})
+        st.chat_message("assistant").write(response)
 # -----------------------------------------------------------------------------
 # 3. CROP DISEASE DETECTION
 # -----------------------------------------------------------------------------
@@ -733,117 +764,143 @@ elif "Fertilizer Recommendations" in nav_key:
 # -----------------------------------------------------------------------------
 # 6. CLIMATE & WEATHER ADVICE (SKY BLUE THEME) - colors unchanged
 # -----------------------------------------------------------------------------
-elif "Climate & Weather Advice" in nav_key:
+elif "Climate & Weather Advice" in navigation or "Climate & Weather Advice" in st.session_state.nav_page:
     st.markdown("""
-        <div style="background: linear-gradient(135deg, #0369A1 0%, #0284C7 60%, #38BDF8 100%); padding: 2.2rem 2.5rem; border-radius: 18px; color: white; margin-bottom: 2rem; box-shadow: 0 12px 28px -6px rgba(2, 132, 199, 0.28);">
-            <h1 style="color:white; margin:0; font-size:2.2rem; font-weight:800;">🌤️ Real-Time Weather Sync & Climate Risk Mitigation</h1>
-            <p style="color:#E0F2FE; margin-top:0.4rem; font-size:1.05rem;">Live weather metrics and agricultural weather extreme protection strategies</p>
+        <div style="background: linear-gradient(135deg, #0284C7 0%, #38BDF8 100%); padding: 2rem; border-radius: 16px; color: white; margin-bottom: 2rem;">
+            <h2 style="color:white; margin:0;">🌤️ Real-Time Climate & Weather Guidance</h2>
+            <p style="color:#E0F2FE; margin-top:0.4rem;">Fetch live location weather metrics and receive actionable crop protection advisories.</p>
         </div>
     """, unsafe_allow_html=True)
+    
+    # 1. Inputs Section
+    col_w1, col_w2 = st.columns(2)
+    with col_w1:
+        city_input = st.text_input("Enter City / Region Name:", value="Lahore")
+        fetch_btn = st.button("Fetch Live Weather Data", type="primary")
+        
+    with col_w2:
+        season_cond = st.selectbox("Select Current / Forecasted Weather Event:", ["Normal / Seasonal Conditions", "Heavy Rain / Flood", "Heatwave", "Drought / Dry Spell", "Frost / Cold Snap"])
+        soil_m = st.selectbox("Soil Moisture Status:", ["Optimal", "Low", "Excessive / Waterlogged"])
 
-    st.markdown("""
-        <style>
-        div[data-testid="stNumberInputStepDown"], div[data-testid="stNumberInputStepUp"], .stButton>button {
-            background: linear-gradient(135deg, #0284C7 0%, #38BDF8 100%) !important;
-            box-shadow: 0 4px 10px rgba(2, 132, 199, 0.3) !important;
-        }
-        div[data-baseweb="select"] svg { fill: #0284C7 !important; }
-        </style>
-    """, unsafe_allow_html=True)
+    # 2. Session State Initialization
+    if "live_weather_data" not in st.session_state:
+        st.session_state.live_weather_data = None
 
-    wc1, wc2 = st.columns([1, 1], gap="large")
-    with wc1:
-        st.markdown('<div class="agri-card" style="background-color:#F0F9FF; border:1px solid #BAE6FD;"><h3 style="color:#0284C7; margin:0;">📡 Live Weather API Sync</h3>', unsafe_allow_html=True)
-        loc = st.text_input("Enter City / Region Name:", value="Lahore")
-        btn_weather = st.button("Fetch Live Weather Data")
-        st.markdown('</div>', unsafe_allow_html=True)
+    # 3. Handle Button Click & Fetch Weather
+    if fetch_btn:
+        with st.spinner(f"Fetching real-time weather metrics for {city_input}..."):
+            weather_res = fetch_live_weather(city_name=city_input)
+            st.session_state.live_weather_data = weather_res
+            st.success(f"Weather metrics updated for {city_input}!")
 
-    with wc2:
-        st.markdown('<div class="agri-card" style="background-color:#F0F9FF; border:1px solid #BAE6FD;"><h3 style="color:#0284C7; margin:0;">🌧️ Climate Stress Simulator</h3>', unsafe_allow_html=True)
-        m_weather = st.selectbox(
-            "Select Current / Forecasted Weather Event:",
-            [
-                "Normal / Seasonal Conditions",
-                "Excessive Heat / Drought (No Rain)",
-                "Sudden Heavy Rain / Waterlogging",
-                "High Humidity & Cloudy",
-                "Sudden Cold Snap / Frost"
-            ]
+    # 4. Display Weather Data & Generated Advisories
+    if st.session_state.live_weather_data:
+        w_data = st.session_state.live_weather_data
+        
+        st.markdown("---")
+        st.subheader(f"📍 Live Weather Metrics: {w_data.get('city', city_input)}")
+        
+        # Display Metric Cards
+        m1, m2, m3, m4 = st.columns(4)
+        m1.metric("Temperature", f"{w_data.get('temperature', 25.0)} °C")
+        m2.metric("Humidity", f"{w_data.get('humidity', 60.0)} %")
+        m3.metric("Wind Speed", f"{w_data.get('wind_speed', 3.0)} m/s")
+        m4.metric("Condition", w_data.get('description', 'Clear'))
+
+        st.markdown("---")
+        st.subheader("💡 Agronomic Weather Advisory")
+        
+        # Generate and display advisory list
+        advisories = generate_weather_advisory(
+            crop_type="General Crops",
+            manual_weather=season_cond,
+            soil_moisture=soil_m,
+            live_weather=w_data
         )
-        soil_m = st.selectbox("Soil Moisture Status:", ["Optimal", "Low / Dry", "Excessive / Saturated"])
-        st.markdown('</div>', unsafe_allow_html=True)
-
-    live_weather_data = None
-    if btn_weather and loc:
-        with st.spinner("Connecting to Meteorological Service..."):
-            live_weather_data = fetch_live_weather(loc)
-            if not live_weather_data["success"]:
-                st.warning(live_weather_data["message"])
-
-    st.markdown("<br>", unsafe_allow_html=True)
-    tips = generate_weather_advisory("General Crops", m_weather, soil_m, live_weather=live_weather_data)
-    for tip in tips:
-        st.markdown(f'<div class="agri-card" style="background-color:#F0F9FF; border:1px solid #BAE6FD; border-left:6px solid #0284C7; color:#0369A1;">{tip}</div>', unsafe_allow_html=True)
-
-# -----------------------------------------------------------------------------
-# 7. CROP SUITABILITY GUIDANCE (FIELD HARVEST GOLD-GREEN)
-# -----------------------------------------------------------------------------
-elif "Crop Suitability Guidance" in nav_key:
+        
+        for adv in advisories:
+            st.info(adv)
+elif "Crop Suitability Guidance" in navigation or "Crop Suitability Guidance" in st.session_state.nav_page:
     st.markdown("""
-        <div style="background: linear-gradient(135deg, #F7FDEE 0%, #DDF2BE 100%); border: 1px solid #C5E5A0; padding: 2.2rem 2.5rem; border-radius: 18px; margin-bottom: 2rem; box-shadow: 0 12px 28px -10px rgba(101, 163, 13, 0.22);">
-            <h1 style="color:#3F6212; margin:0; font-size:2.2rem; font-weight:800;">🌾 Multi-Criteria Land & Crop Suitability Engine</h1>
-            <p style="color:#5B7F2B; margin-top:0.4rem; font-size:1.05rem;">Rank candidate crops according to field soil pH, texture, and water availability</p>
+        <div style="background: linear-gradient(135deg, #15803D 0%, #22C55E 100%); padding: 2rem; border-radius: 16px; color: white; margin-bottom: 2rem;">
+            <h2 style="color:white; margin:0;">🌾 Crop Suitability & Growth Guidance</h2>
+            <p style="color:#DCFCE7; margin-top:0.4rem;">Evaluate soil parameters, temperature ranges, and water requirements to find ideal crops for your farm.</p>
         </div>
     """, unsafe_allow_html=True)
 
-    st.markdown("""
-        <style>
-        div[data-testid="stNumberInputStepDown"], div[data-testid="stNumberInputStepUp"], .stButton>button, div[data-testid="stForm"] button {
-            background: linear-gradient(135deg, #7BB83A 0%, #A5D36F 100%) !important;
-        }
-        div[data-baseweb="select"] svg { fill: #7BB83A !important; }
-        </style>
-    """, unsafe_allow_html=True)
+    # Input Parameters Form
+    col_cs1, col_cs2 = st.columns(2)
+    with col_cs1:
+        target_ph = st.slider("Select Soil pH Level:", min_value=4.0, max_value=9.0, value=6.5, step=0.1)
+        soil_type_selected = st.selectbox("Select Soil Texture:", ["Loam", "Sandy Loam", "Clay Loam", "Silt Loam"])
 
-    with st.form("suit_form"):
-        sc1, sc2 = st.columns(2)
-        with sc1:
-            e_ph = st.number_input("Field Soil pH:", min_value=4.0, max_value=10.0, value=6.5)
-            e_soil = st.selectbox("Soil Texture Profile:", ["Loam", "Sandy Loam", "Clay Loam", "Sandy", "Heavy Clay", "Silt Loam"])
-        with sc2:
-            e_water = st.selectbox("Water Resource Availability:", ["High", "Medium", "Low"])
+    with col_cs2:
+        temp_val = st.number_input("Average Temperature (°C):", min_value=0.0, max_value=50.0, value=25.0)
+        water_avail = st.selectbox("Water Availability:", ["High", "Medium", "Low"])
 
-        submit_suit = st.form_submit_button("Evaluate Crop Suitability")
+    st.markdown("---")
+    st.subheader("📋 Suitable Crop Recommendations")
 
-    if submit_suit:
-        rankings = rank_crop_suitability(e_ph, e_soil, e_water)
-        st.markdown("<br>", unsafe_allow_html=True)
-        for r in rankings:
-            try:
-                score_pct = max(0, min(100, float(r['score'])))
-            except (TypeError, ValueError):
-                score_pct = 0
-            bar_color = "#65A30D" if score_pct >= 70 else ("#F59E0B" if score_pct >= 40 else "#EF4444")
-            st.markdown(f"""
-                <div class="agri-card" style="border-left: 6px solid #9BCB5E; background-color: #FAFEF4;">
-                    <div style="display:flex; justify-content:space-between; align-items:center;">
-                        <h3 style="margin:0; color:#3F6212;">{r['crop']}</h3>
-                        <span class="badge-mint">{r['status']} ({r['score']}/100)</span>
-                    </div>
-                    <div class="meter-track"><div class="meter-fill" style="width:{score_pct}%; background:{bar_color};"></div></div>
-                    <p style="margin-top:0.8rem;">{r['description']}</p>
-                    <p><b>Target pH Range:</b> {r['optimal_ph']}</p>
-                </div>
-            """, unsafe_allow_html=True)
+    # Recommendation Logic
+    recommended_crops = []
 
+    # Tomato Logic
+    if 5.8 <= target_ph <= 7.2 and 15 <= temp_val <= 32:
+        recommended_crops.append({
+            "name": "🍅 Tomato",
+            "suitability": "High (Optimal Conditions)",
+            "ph_range": "6.0 - 6.8",
+            "water": "Medium to High",
+            "advice": "Ideal conditions for tomato cultivation. Ensure proper drainage and support stakes."
+        })
+
+    # Potato Logic
+    if 4.8 <= target_ph <= 6.8 and 12 <= temp_val <= 26:
+        recommended_crops.append({
+            "name": "🥔 Potato",
+            "suitability": "High (Optimal Conditions)",
+            "ph_range": "5.0 - 6.5",
+            "water": "Medium",
+            "advice": "Slightly acidic soil favors potato tuber development. Avoid waterlogging."
+        })
+
+    # Pepper Bell Logic
+    if 5.8 <= target_ph <= 7.2 and 18 <= temp_val <= 33:
+        recommended_crops.append({
+            "name": "🫑 Pepper Bell (Capsicum)",
+            "suitability": "High (Optimal Conditions)",
+            "ph_range": "6.0 - 7.0",
+            "water": "Medium",
+            "advice": "Requires warm soil with uniform moisture levels for optimal yield."
+        })
+
+    # Maize / Corn Logic
+    if 5.5 <= target_ph <= 7.5 and 18 <= temp_val <= 35:
+        recommended_crops.append({
+            "name": "🌽 Maize / Corn",
+            "suitability": "Moderate to High",
+            "ph_range": "5.8 - 7.0",
+            "water": "High",
+            "advice": "Thrives well in loam soil with good nitrogen management."
+        })
+
+    # Display Results
+    if recommended_crops:
+        for crop in recommended_crops:
+            with st.expander(f"{crop['name']} - Suitability: {crop['suitability']}", expanded=True):
+                st.write(f"**Ideal pH Range:** {crop['ph_range']}")
+                st.write(f"**Water Need:** {crop['water']}")
+                st.info(crop['advice'])
+    else:
+        st.warning("⚠️ No exact high-suitability crop match found for the selected soil pH and temperature combination. Try adjusting parameters closer to pH 6.0 - 7.0 and 20°C - 30°C.")
 # -----------------------------------------------------------------------------
 # 8. ABOUT PROJECT (SLATE STEEL THEME)
 # -----------------------------------------------------------------------------
-elif "About Project" in nav_key:
+elif "About Project" in nav_key or "About Project" in st.session_state.get("nav_page", ""):
     st.markdown("""
-        <div style="background: linear-gradient(135deg, #1E293B 0%, #475569 60%, #64748B 100%); padding: 2.2rem 2.5rem; border-radius: 18px; color: white; margin-bottom: 2rem; box-shadow: 0 12px 28px -6px rgba(71, 85, 105, 0.28);">
-            <h1 style="color:white; margin:0; font-size:2.2rem; font-weight:800;">ℹ️ Project Architecture & Viva Overview</h1>
-            <p style="color:#CBD5E1; margin-top:0.4rem; font-size:1.05rem;">Technical stack breakdown and underlying AI module structure</p>
+        <div style="background: linear-gradient(135deg, #1E293B 0%, #475569 60%, #64748B 100%); padding: 2rem; border-radius: 16px; color: white; margin-bottom: 2rem;">
+            <h1 style="color:white; margin:0; font-size:2.2rem; font-weight:800;">ℹ️ Project Architecture & EDA Pipeline</h1>
+            <p style="color:#CBD5E1; margin-top:0.4rem; font-size:1.05rem;">Technical stack breakdown, system design, and exploratory data analytics</p>
         </div>
     """, unsafe_allow_html=True)
 
@@ -860,3 +917,9 @@ elif "About Project" in nav_key:
             </ul>
         </div>
     """, unsafe_allow_html=True)
+    
+    st.markdown("---")
+    
+    # Render EDA Pipeline Dashboard with Soil pH Bar & Line Charts
+    from modules.eda_pipeline import render_eda_dashboard
+    render_eda_dashboard()
