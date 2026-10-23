@@ -1,7 +1,6 @@
 import os
 import json
 import pandas as pd
-import plotly.express as px
 import streamlit as st
 
 def render_eda_dashboard():
@@ -29,27 +28,34 @@ def render_eda_dashboard():
     agri_db_path = os.path.join("database", "crop_agronomic_db.json")
     if os.path.exists(agri_db_path):
         with open(agri_db_path, "r") as f:
-            data = json.load(f)
-        df = pd.DataFrame(data)
-        
-        # Display DataFrame & Summary Stats
-        st.dataframe(df, use_container_width=True)
+            raw_data = json.load(f)
+            
+        df_raw = pd.DataFrame(raw_data)
+        st.dataframe(df_raw, use_container_width=True)
         
         st.subheader("📈 2. Interactive Exploratory Visualizations")
         
+        # Transform data structure into clean rows for visualization
+        rows = []
+        for crop_name, metrics in raw_data.items():
+            if isinstance(metrics, dict):
+                rows.append({
+                    "Crop": crop_name,
+                    "Optimal Soil pH": float(metrics.get("optimal_ph", 6.5)),
+                    "Min Soil pH": float(metrics.get("ph_min", 6.0)),
+                    "Max Soil pH": float(metrics.get("ph_max", 7.0))
+                })
+        
+        plot_df = pd.DataFrame(rows)
+        
         c1, c2 = st.columns(2)
         with c1:
-            if "temperature_range" in df.columns:
-                fig1 = px.histogram(df, x="crop_name", y="soil_ph", title="Soil pH Distribution across Crops", color="crop_name")
-                st.plotly_chart(fig1, use_container_width=True)
-            else:
-                st.info("Sample EDA Metrics generated from Agronomic Database.")
-        
+            st.write("**Optimal Soil pH Comparison Across Crops**")
+            st.bar_chart(plot_df.set_index("Crop")[["Optimal Soil pH"]])
+            
         with c2:
-            if "water_requirement" in df.columns:
-                fig2 = px.bar(df, x="crop_name", y="water_requirement", title="Water Requirement Index by Crop", color="crop_name")
-                st.plotly_chart(fig2, use_container_width=True)
-            else:
-                st.info("Crop metrics visualized cleanly.")
+            st.write("**Soil pH Ranges (Min vs Max)**")
+            st.line_chart(plot_df.set_index("Crop")[["Min Soil pH", "Max Soil pH"]])
+            
     else:
-        st.warning("`database/crop_agronomic_db.json` not found. Showing sample EDA layout.")
+        st.warning("`database/crop_agronomic_db.json` not found.")
